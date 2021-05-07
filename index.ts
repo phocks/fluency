@@ -4,6 +4,8 @@ import { getAppAuth } from './lib/getTwitterClient'
 
 console.log(chalk.redBright('Welcome to Twitter v2 API'))
 
+let count = 0
+
 const main = async () => {
   const client = getAppAuth()
 
@@ -27,9 +29,17 @@ const main = async () => {
     }
   }
 
-  listenForever(
-    () => client.stream('tweets/search/stream'),
-    (data) => console.log(data)
+  //api.twitter.com/2/tweets/sample/stream?tweet.fields=created_at&expansions=author_id&user.fields=created_at
+
+  https: listenForever(
+    () => client.stream('tweets/sample/stream', { expansions: 'author_id' }),
+    (data) => {
+      if (data.text.includes('dog')) {
+        count++
+        console.log(count)
+        console.log(data)
+      }
+    }
   )
 }
 
