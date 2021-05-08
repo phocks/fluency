@@ -12,6 +12,11 @@ const main = async () => {
   const { data } = await client.get('tweets', { ids: '1228393702244134912' })
   console.log(data)
 
+  // const { data2 } = await client.post('tweets/search/stream/rules', {
+  //   add: [{ value: 'cat has:images', tag: 'cats with images' }]
+  // })
+  // console.log(data2)
+
   async function listenForever(streamFactory, dataConsumer) {
     try {
       for await (const { data } of streamFactory()) {
@@ -31,14 +36,12 @@ const main = async () => {
 
   //api.twitter.com/2/tweets/sample/stream?tweet.fields=created_at&expansions=author_id&user.fields=created_at
 
+  //curl -v https://api.twitter.com/2/tweets/search/stream/rules -H "Authorization: Bearer $BEARER_TOKEN"
+
   https: listenForever(
-    () => client.stream('tweets/sample/stream', { expansions: 'author_id' }),
+    () => client.stream('tweets/search/stream'),
     (data) => {
-      if (data.text.includes('dog')) {
-        count++
-        console.log(count)
-        console.log(data)
-      }
+      console.log(data)
     }
   )
 }
